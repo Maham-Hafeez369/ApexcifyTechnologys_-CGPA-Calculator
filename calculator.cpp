@@ -6,7 +6,7 @@ private:
     float credits;
     float grade_point;
 public:
-    string name;
+    string name; // course name
     float getCredits() // get credits
     {
         return credits;
@@ -28,14 +28,30 @@ public:
         return credits * grade_point;
     }
 };
-int main()
+float TotalWeightedGradePoints(Course courses[], int n)   // calculate total weighted grade points
 {
-    int n;
-    float total_credits = 0.0;
-    float total_weighted_grade_points = 0.0;
-    cout << "Enter number of courses: ";
-    cin >> n;
-    Course courses[n];
+    float total = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        total += courses[i].getWeightedGradePoint();
+    }
+    return total;
+}
+float TotalCredits(Course courses[], int n)   // calculate total credits
+{
+    float total = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        total += courses[i].getCredits();
+    }
+    return total;
+}
+float CalculateCGPA(float total_weighted_grade_points, float total_credits)  // calculate CGPA
+{
+    return total_weighted_grade_points / total_credits;
+}
+void InputCourseDetails(Course courses[], int n)  // input course details
+{
     for (int i = 0; i < n; i++)
     {
         float credits, grade_point;
@@ -47,10 +63,31 @@ int main()
         cout << "Enter grade point for " << courses[i].name << ": ";
         cin >> grade_point;                                                // input grade point
         courses[i].setGradePoint(grade_point);                             // set grade point
-        total_weighted_grade_points += courses[i].getWeightedGradePoint(); // calculate total weighted grade points
-        total_credits += courses[i].getCredits();                          // calculate total credits
     }
-    float cgpa = total_weighted_grade_points / total_credits; // calculate CGPA
-    cout << "Your CGPA is: " << cgpa << endl;
+}
+void DisplayCourseDetails(Course courses[], int n)  // display course details
+{
+    cout << "Course Details:" << endl;
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Course Name: " << courses[i].name << ", Grade Points: " << courses[i].getWeightedGradePoint() << endl;
+    }
+}
+void RunSystem (){
+    cout<<"Enter number of courses: ";
+    int n;  
+    cin>>n;
+    Course* courses = new Course[n]; // dynamic array of courses
+    InputCourseDetails(courses, n);  // input course details
+   float gpa=CalculateCGPA(TotalWeightedGradePoints(courses, n), TotalCredits(courses, n)); // calculate CGPA
+    cout << "Your CGPA is: " << gpa << endl; // display CGPA
+    DisplayCourseDetails(courses, n); // display course details
+    delete[] courses;                         // free dynamic memory
+
+}
+int main()
+{
+    cout << "Welcome to the Apexcify Technologies CGPA Calculator System" << endl;
+    RunSystem();
     return 0;
 }
